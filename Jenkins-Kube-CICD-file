@@ -1,0 +1,32 @@
+pipeline {
+    agent any 
+	stages {
+	    stage('checkout repo') {
+		                steps { 
+						        git url: 'https://github.com/saierukulla/DevOpsClassCodes-1.git'
+			}
+        }
+        stage('build artifact') {
+                        steps {
+                                sh 'mvn clean package'	
+			}
+        }
+        stage('build docker images')
+                        steps { 
+                                sh 'docker build -t saierukulla/addressbook .'
+			}
+        }
+        stage('push docker image') {
+                        steps {
+                                withCredentials([string(credentialsId: 'DOCKER_HUB_PWD', variable: 'DOCKER_HUB_PWD'
+				sh "docker login -u saierukulla -p ${DOCKER_HUB_PWD}"
+				                }
+								sh 'docker push saierukulla/addressbook'
+								
+						}
+        }
+        stage('Deploy to k8s') {
+		                steps {
+                                sh 'kubectl apply -f addressbook-deploy.yml'						
+		
+								
