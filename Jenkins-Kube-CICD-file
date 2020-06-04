@@ -29,5 +29,8 @@ pipeline {
 		                steps {
                                        sh 'kubectl apply -f addressbook-deploy.yml'
 				}
+	}
+    }
+}    
 		
 								
